@@ -4,9 +4,13 @@
  */
 package robopipe;
 
+import java.awt.GraphicsEnvironment;
+import java.io.Console;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,6 +22,9 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class App {
 	
+	///TODO: Always remember to set to false before building
+	static boolean isEclipse = true;
+	
 	NetworkTableEntry encoderEntry, navXEntry;
 	double encoder = 46.83583538, navX = 3.37583994;
 	ServerSocket serverSocket;
@@ -27,10 +34,31 @@ public class App {
     InputStream in;
     String output;
 	
-	public static void main( String[] args )
-	{
-		System.out.println("Robopipe Start");
-        new App().run();
+    public static void main( String[] args )
+    {
+    	// Thanks to Frezze98 bolalo on StackOverflow for the code to create a batch file
+    	// to start the program in a command window
+    	Console console = System.console();
+    	if(console == null && !GraphicsEnvironment.isHeadless() && !isEclipse) {
+    		String filename = new File(App.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
+    		try {
+    			File batch = new File("Launcher.bat");
+    			if(!batch.exists()){
+    				batch.createNewFile();
+    				PrintWriter writer = new PrintWriter(batch);
+    				writer.println("@echo off");
+    				writer.println("java -jar "+filename);
+    				writer.println("exit");
+    				writer.flush();
+    			}
+    			Runtime.getRuntime().exec("cmd /c start \"\" "+batch.getPath());
+    		} catch(IOException e) {
+    			e.printStackTrace();
+    		}
+    	} else {
+    		System.out.println("Robopipe Start");
+    		new App().run();
+    	}
     }
 
     public void run() {
