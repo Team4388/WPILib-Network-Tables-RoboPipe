@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Users/Keenan Buckley/eclipse-workspace/robopipe/lib/ntcore-java-4.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Keenan Buckley/eclipse-workspace/robopipe/lib/ntcore-jni-4.0.0-all.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Keenan Buckley/eclipse-workspace/robopipe/lib/wpiutil-java-3.0.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
