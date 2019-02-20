@@ -24,7 +24,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 public class App {
 
 	/// TODO: Always remember to set to false before building
-	static boolean isEclipse = true;
+	static boolean isEclipse = false;
 
 	String[] robotValues;
 	List<NetworkTableEntry> tableEntrys = new ArrayList<NetworkTableEntry>();
@@ -39,50 +39,56 @@ public class App {
 	static boolean EXIT = false;
 
 	public static void main(String[] args) {
-		// Thanks to Frezze98 bolalo on StackOverflow for the code to create a batch file
-    	// to start the program in a command window
-    	Console console = System.console();
-    	if(console == null && !GraphicsEnvironment.isHeadless()) {
-    		String filename = new File(App.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
-    		try {
-    			File batch = new File("Launcher.bat");
-    			if(!batch.exists()){
-    				batch.createNewFile();
-    				PrintWriter writer = new PrintWriter(batch);
-    				writer.println("@echo off");
-    				writer.println("java -jar "+ filename + " " + args[0]);
-    				writer.println("exit");
-    				writer.flush();
-    			}
-    			Runtime.getRuntime().exec("cmd /c start \"\" "+batch.getPath());
-    		} catch(IOException e) {
-    			e.printStackTrace();
-    		}
-    	} else {
-    		PORT_NUMBER = Integer.parseInt(args[0]);
+		if (!isEclipse) {
+			// Thanks to Frezze98 bolalo on StackOverflow for the code to create a batch file
+	    	// to start the program in a command window
+	    	Console console = System.console();
+	    	if(console == null && !GraphicsEnvironment.isHeadless()) {
+	    		String filename = new File(App.class.getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
+	    		try {
+	    			File batch = new File("Launcher.bat");
+	    			if(!batch.exists()){
+	    				batch.createNewFile();
+	    				PrintWriter writer = new PrintWriter(batch);
+	    				writer.println("@echo off");
+	    				writer.println("java -jar "+ filename + " " + args[0]);
+	    				writer.println("exit");
+	    				writer.flush();
+	    			}
+	    			Runtime.getRuntime().exec("cmd /c start \"\" "+batch.getPath());
+	    		} catch(IOException e) {
+	    			e.printStackTrace();
+	    		}
+	    	} else {
+	    		PORT_NUMBER = Integer.parseInt(args[0]);
+	    		System.out.println("Robopipe Start");
+	    		while (!EXIT) {
+	    			new App().run();
+	    		}
+	    	}
+		} else {
     		System.out.println("Robopipe Start");
     		while (!EXIT) {
     			new App().run();
     		}
-    		EXIT = true;
-    	}
+		}
 	}
 
 	public void run() {
 		try {
 			NetworkTableInstance inst = NetworkTableInstance.getDefault();
 			NetworkTable table = inst.getTable("/SmartDashboard");
-			System.out.println("Connecting to Unity local server...");
+			System.out.println("Connecting to local server on port " + PORT_NUMBER + "...");
 			//serverSocket = new ServerSocket(portNumber);
 			clientSocket = new Socket("127.0.0.1", PORT_NUMBER);
 			os = clientSocket.getOutputStream();
 			in = clientSocket.getInputStream();
-			System.out.println("Connected");
-			byte[] byteRequest = new byte[100];
+			System.out.println("Connected, waiting for request...");
+			byte[] byteRequest = new byte[1000];
 			in.read(byteRequest);
 			String request = new String(byteRequest, StandardCharsets.UTF_8);
 			robotValues = request.split(",");
-			System.out.println("Request Recieved: " + request + robotValues.length);
+			System.out.println("Request Recieved: " + request + " Length: " + robotValues.length);
 			for (String value : robotValues) {
 				tableEntrys.add(table.getEntry(value.trim()));
 			}
@@ -90,26 +96,25 @@ public class App {
 			inst.startDSClient();
 
 			while (!EXIT) {
-				toUnity();
+				toClient();
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void toUnity() throws IOException {
+	private void toClient() throws IOException {
 		output = "";
 		for (NetworkTableEntry entry : tableEntrys) {
 			output += round(entry.getDouble(0), 5);
-			output += "|";
+			output += ",";
 			System.out.println("'" + entry.getName() + "'");
 		}
 		
 		output = output.substring(0, output.length() - 1);
 		byte[] byteOutput = output.getBytes(StandardCharsets.UTF_8);
-		System.out.println("Sending '" + output + "' of length: " + byteOutput.length + " to Unity...");
+		System.out.println("Sending '" + output + "' of length: " + byteOutput.length + " to local port...");
 		os.write(byteOutput);
-		
 		System.out.println("Waiting for Response...");
 		byte[] byteInput = new byte[4];
 		in.read(byteInput);
