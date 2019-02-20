@@ -4,7 +4,7 @@ RoboPipe is a java-based script that allows the user to pull SmartDashboard valu
 For information on installing RoboPipe, see Installation. For information on creating a program to interact with RoboPipe, see Setup.
 
 ## Installation
-To install Robopipe, start by downloading the latest jar from [Releases](https://github.com/Team4388/WPILib-Network-Tables-RoboPipe/releases) page. Put it into its own folder so that the batch file it creates won't clutter up your files. Then, finish by either running RoboPipe.jar (opens socket on default port), or use the command line to set a specific port.
+To install Robopipe, start by downloading the latest jar from the [Releases](https://github.com/Team4388/WPILib-Network-Tables-RoboPipe/releases) page. Put it into its own folder so that the batch file it creates won't clutter up your files. Then, finish by either running RoboPipe.jar (opens socket on default port), or use the command line to open it with a specific port.
 ``` CMD
 cd (Directory of RoboPipe)
 java -jar RoboPipe.jar (Port Number)
@@ -17,7 +17,7 @@ Connecting to RoboPipe is as follows:
 - Once connected, send RoboPipe a comma separated string with the exact notation of the values you want to grab from SmartDashboard (**a,b,c**).
 
 Then RoboPipe will enter into a loop that does the following:
-- It will send a comma separated response in the form of (**a,b,c**).
-- Then send back the 4 byte string "CONT" to get another value
+- Sends a comma separated response in the form of (**a,b,c**).
+- The user then sends back the 4 byte string "CONT" to get another value
 
 When you want to close RoboPipe you can do so automatically by sending it "EXIT"
