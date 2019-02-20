@@ -1,5 +1,5 @@
 # RoboPipe
-RoboPipe is a java-based script that allows the user to pull SmartDashboard values into other programs. The API uses [.NET sockets](https://docs.microsoft.com/en-us/dotnet/standard/get-started) and connects to the SmartDashboard using the [Network Tables Libraries](https://wpilib.screenstepslive.com/s/currentCS/m/75361/l/851714-creating-a-client-side-program). RoboPipe will take a startup request and will send the requester a stream of the requested values.
+RoboPipe is a java-based script that allows the user to pull SmartDashboard values into other custom software. The API uses [.NET sockets](https://docs.microsoft.com/en-us/dotnet/standard/get-started) and connects to the SmartDashboard using the [Network Tables Libraries](https://wpilib.screenstepslive.com/s/currentCS/m/75361/l/851714-creating-a-client-side-program). RoboPipe will take a startup request and will send the requester a stream of the requested values.
 
 For information on installing RoboPipe, see Installation. For information on creating a program to interact with RoboPipe, see Setup.
 
